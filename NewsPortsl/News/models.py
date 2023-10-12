@@ -55,13 +55,16 @@ class Post(models.Model, Reaction):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     category = models.ManyToManyField(Category, through='PostCategory')
     type = models.CharField(choices=TYPES, default=news, max_length=2)
-    date_time = models.DateField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True)
     subject = models.CharField(max_length=100)
     text = models.TextField()
     rating = models.IntegerField(default=0)
 
     def preview(self):
         return f"{self.text[:124]}..."
+
+    def __str__(self):
+        return f"{self.text}"
 
 
 class PostCategory(models.Model):

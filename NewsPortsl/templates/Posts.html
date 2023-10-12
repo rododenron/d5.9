@@ -1,0 +1,23 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %} Posts {% endblock title %}
+
+{% block content %}
+<h1>Posts count {{ posts | length }}</h1>
+{% if posts %}
+    <table>
+        <tr>
+            <td>Subject</td>
+            <td>Date_Time<td>
+            <td>Text</td>
+        </tr>
+        {% for post in posts %}
+            <tr>
+                <td>{{post.subject}}</td>
+                <td>{{post.date_time | date:'d M Y'}}</td>
+                <td>{{post.text | truncatechars:20}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% endblock content %}
