@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import models as models_auth
+from django.urls import reverse
 
 # Create your models here.
 
@@ -65,6 +66,9 @@ class Post(models.Model, Reaction):
 
     def __str__(self):
         return f"{self.text}"
+
+    def get_absolute_url(self):
+        return reverse('posts_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
