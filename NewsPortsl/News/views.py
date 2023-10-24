@@ -1,9 +1,13 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import redirect
 from .models import Post
 from .filters import *
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -38,10 +42,11 @@ class PostSearch(ListView):
         return context
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('News.add_post', 'News.edit_post')
     form_class = PostForm
     model = Post
-    template_name = 'post_create.html'
+    template_name = 'post_edit.html'
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -51,12 +56,31 @@ class PostCreate(CreateView):
             post.type = 'AR'
         return super().form_valid(form)
 
-class PostEdit(UpdateView):
+class PostEdit(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('News.add_post', 'News.edit_post')
     form_class = PostForm
     model = Post
-    template_name = 'post_create.html'
+    template_name = 'post_edit.html'
 
-class PostDelete(DeleteView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_premium'] = not self.request.user.groups.filter(name='author').exists()
+        return context
+
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        return context
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    authors_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        authors_group.user_set.add(user)
+    return redirect('/news')

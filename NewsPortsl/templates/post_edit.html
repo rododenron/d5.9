@@ -3,6 +3,11 @@
 {% block content %}
 <h1>News</h1>
 <hr>
+
+{% if is_not_author %}
+<button> <a href="News/upgrade/"> Become an author!</a> </button>
+{% endif %}
+
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}

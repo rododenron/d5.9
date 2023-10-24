@@ -3,6 +3,11 @@
 {% block content %}
 <h1>Deleting post</h1>
 <hr>
+
+{% if is_not_author %}
+<button> <a href="{% url 'upgrade' %}"> Become an author!</a> </button>
+{% endif %}
+
 <form action="" method="post">
     {% csrf_token %}
     <p>Deleting "{{ object.subject }}"?</p>
