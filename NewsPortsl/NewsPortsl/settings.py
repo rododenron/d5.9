@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +158,12 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_FORMS = {'signup': 'News.forms.BasicSignupForm'}
+
+SITE_URL="http://127.0.0.1:8000"
+
+DEFAULT_FROM_EMAIL = "test@test.com"
+RECIPIENTS_EMAIL = "rio@test.com"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25

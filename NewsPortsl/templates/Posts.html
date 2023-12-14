@@ -19,6 +19,10 @@
                     <td>{{post.subject}}</td>
                     <td>{{post.date_time | date:'d M Y'}}</td>
                     <td>{{post.text | truncatechars:20}}</td>
+                    <td>{% for category in post.category.all%}
+                            <a href="{% url 'categories' %}"> {{category.name}} </a>
+                        {% endfor %}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
@@ -33,10 +37,8 @@
        {% endif %}
     {% endif %}
 
-   {# Информация о текущей странице #}
    {{ page_obj.number }}
 
-   {# Информация о следующих страницах #}
    {% if page_obj.has_next %}
        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
        {% if paginator.num_pages != page_obj.next_page_number %}

@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.shortcuts import redirect
-from .models import Post
+from django.shortcuts import redirect, render
+from .models import Post, Category
 from .filters import *
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
@@ -84,3 +84,18 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
     return redirect('/news')
+
+class CategoriesList(ListView):
+    model = Category
+    ordering = 'name'
+    template_name = 'categories_list.html'
+    context_object_name = 'categories'
+    paginate_by = 10
+
+
+@login_required()
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+    return render(request, 'subscribe.html', {'category': category})

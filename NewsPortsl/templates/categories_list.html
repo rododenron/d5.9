@@ -1,0 +1,23 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %} Categories {% endblock title %}
+
+{% block content %}
+    <h1>Categories count {{ categories | length }}</h1>
+
+    {% if categories %}
+        <table>
+            <tr>
+                <td>Name</td>
+            </tr>
+            {% for category in categories %}
+                <tr>
+                    <td>  {{category.name}}</td>
+                    <td><button><a href="{% url 'subscribe' category.id %}"> Subscribe </a></button></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+
+{% endblock content %}
