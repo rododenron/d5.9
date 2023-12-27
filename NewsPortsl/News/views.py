@@ -8,6 +8,7 @@ from .models import Post, Category
 from .filters import *
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
+from .tasks import *
 
 # Create your views here.
 
@@ -49,6 +50,7 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     template_name = 'post_edit.html'
 
     def form_valid(self, form):
+        send_message.delay()
         post = form.save(commit=False)
         if 'news' in self.request.path:
             post.type = 'NW'
