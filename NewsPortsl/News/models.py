@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.contrib.auth import models as models_auth
 from django.urls import reverse
@@ -70,6 +71,10 @@ class Post(models.Model, Reaction):
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'Post-{self.pk}')
 
 
 class PostCategory(models.Model):

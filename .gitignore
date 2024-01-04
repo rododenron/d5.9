@@ -40,7 +40,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-/NewsPortsl/cache_files/
+/NewsPortsl/cache_files/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -175,3 +175,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+.djcache
+NewsPortsl/cache_files/

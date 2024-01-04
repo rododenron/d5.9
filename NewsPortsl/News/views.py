@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -24,6 +25,14 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'Post.html'
     context_object_name = 'post'
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'Post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'Post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 class PostSearch(ListView):
     model = Post
