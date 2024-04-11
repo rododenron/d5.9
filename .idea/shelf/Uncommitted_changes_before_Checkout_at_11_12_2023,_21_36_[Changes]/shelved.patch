@@ -1,0 +1,395 @@
+Index: NewsPortsl/NewsPortsl/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\nURL configuration for NewsPortsl project.\n\nThe `urlpatterns` list routes URLs to views. For more information please see:\n    https://docs.djangoproject.com/en/4.2/topics/http/urls/\nExamples:\nFunction views\n    1. Add an import:  from my_app import views\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\nClass-based views\n    1. Add an import:  from other_app.views import Home\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\nIncluding another URLconf\n    1. Import the include() function: from django.urls import include, path\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\n\"\"\"\nfrom django.contrib import admin\nfrom django.urls import path, include\n\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('pages/', include('django.contrib.flatpages.urls')),\n    path('news/', include('News.urls')),\n    path('articles/', include('News.urls')),\n    path('accounts/', include('allauth.urls')),\n]\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/NewsPortsl/urls.py b/NewsPortsl/NewsPortsl/urls.py
+--- a/NewsPortsl/NewsPortsl/urls.py	
++++ b/NewsPortsl/NewsPortsl/urls.py	
+@@ -22,5 +22,6 @@
+     path('pages/', include('django.contrib.flatpages.urls')),
+     path('news/', include('News.urls')),
+     path('articles/', include('News.urls')),
++    # path('', include('News.urls')),
+     path('accounts/', include('allauth.urls')),
+ ]
+Index: NewsPortsl/News/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import reverse_lazy\nfrom django.contrib.auth.mixins import LoginRequiredMixin\nfrom django.contrib.auth.mixins import PermissionRequiredMixin\nfrom django.contrib.auth.models import Group\nfrom django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView\nfrom django.shortcuts import redirect\nfrom .models import Post\nfrom .filters import *\nfrom .forms import PostForm\nfrom django.contrib.auth.decorators import login_required\n\n# Create your views here.\n\nclass PostsList(ListView):\n    model = Post\n    ordering = '-date_time'\n    template_name = 'Posts.html'\n    context_object_name = 'posts'\n    paginate_by = 10\n\n\nclass PostDetail(DetailView):\n    model = Post\n    template_name = 'Post.html'\n    context_object_name = 'post'\n\nclass PostSearch(ListView):\n    model = Post\n    ordering = '-date_time'\n    template_name = 'PostSearch.html'\n    context_object_name = 'posts'\n    paginate_by = 2\n\n    def get_queryset(self):    \n        queryset = super().get_queryset()        \n        self.filterset = PostFilter(self.request.GET, queryset)\n        return self.filterset.qs\n\n    def get_context_data(self, **kwargs):\n        context = super().get_context_data(**kwargs)\n        context['filterset'] = self.filterset\n        return context\n\n\nclass PostCreate(PermissionRequiredMixin, CreateView):\n    permission_required = ('News.add_post', 'News.edit_post')\n    form_class = PostForm\n    model = Post\n    template_name = 'post_edit.html'\n\n    def form_valid(self, form):\n        post = form.save(commit=False)\n        if 'news' in self.request.path:\n            post.type = 'NW'\n        else:\n            post.type = 'AR'\n        return super().form_valid(form)\n\nclass PostEdit(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):\n    permission_required = ('News.add_post', 'News.edit_post')\n    form_class = PostForm\n    model = Post\n    template_name = 'post_edit.html'\n\n    def get_context_data(self, **kwargs):\n        context = super().get_context_data(**kwargs)\n        context['is_not_premium'] = not self.request.user.groups.filter(name='author').exists()\n        return context\n\nclass PostDelete(LoginRequiredMixin, DeleteView):\n    model = Post\n    template_name = 'post_delete.html'\n    success_url = reverse_lazy('post_list')\n\n    def get_context_data(self, **kwargs):\n        context = super().get_context_data(**kwargs)\n        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()\n        return context\n\n@login_required\ndef upgrade_me(request):\n    user = request.user\n    authors_group = Group.objects.get(name='authors')\n    if not request.user.groups.filter(name='authors').exists():\n        authors_group.user_set.add(user)\n    return redirect('/news')\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/News/views.py b/NewsPortsl/News/views.py
+--- a/NewsPortsl/News/views.py	
++++ b/NewsPortsl/News/views.py	
+@@ -3,8 +3,9 @@
+ from django.contrib.auth.mixins import PermissionRequiredMixin
+ from django.contrib.auth.models import Group
+ from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+-from django.shortcuts import redirect
+-from .models import Post
++from django.core.mail import send_mail
++from django.shortcuts import redirect, get_object_or_404
++from .models import Post, Category
+ from .filters import *
+ from .forms import PostForm
+ from django.contrib.auth.decorators import login_required
+@@ -16,7 +17,7 @@
+     ordering = '-date_time'
+     template_name = 'Posts.html'
+     context_object_name = 'posts'
+-    paginate_by = 10
++    paginate_by = 5
+ 
+ 
+ class PostDetail(DetailView):
+@@ -84,3 +85,20 @@
+     if not request.user.groups.filter(name='authors').exists():
+         authors_group.user_set.add(user)
+     return redirect('/news')
++
++
++class CategoryList(ListView):
++    model = Post
++    template_name = 'category_list.html'
++    context_object_name = 'category_news_list'
++
++    # def get_queryset(self):
++    #     self.category = get_object_or_404(Category, id=self.kwargs['pk'])
++    #     queryset = Post.objects.filter(category=self.category).order_by('-date')
++    #     return queryset
++    #
++    # def get_context_data(self, *, object_list=None, **kwargs):
++    #     context = super().get_context_data(**kwargs)
++    #     context['is_not_subscriber'] = self.request.user not in self.category.subscribes.all()
++    #     context['category'] = self.category
++    #     return context
+\ No newline at end of file
+Index: NewsPortsl/News/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\nfrom django.contrib.auth import models as models_auth\nfrom django.urls import reverse\n\n# Create your models here.\n\nclass Reaction():\n    def __init__(self):\n        pass\n\n    def like(self):\n        self.rating += 1\n        self.save()\n\n    def dislike(self):\n        self.rating -= 1\n        self.save()\n\n\nclass Author(models.Model):\n    rating = models.IntegerField(default=0)\n    user = models.OneToOneField(models_auth.User, on_delete=models.CASCADE)\n\n    def update_rating(self):\n        posts_rating = 0\n        comments_rating = 0\n        posts_comment_rating = 0\n\n        posts = Post.objects.filter(author=self)\n        for post in posts:\n            posts_rating += post.rating\n\n        comments = Comment.objects.filter(user=self.user)\n        for comment in comments:\n            comments_rating += comment.rating\n\n        posts_comments = Comment.objects.filter(post__author=self)\n        for post_comment in posts_comments:\n            posts_comment_rating += post_comment.rating\n\n        self.rating = posts_rating * 3 + comments_rating + posts_comment_rating\n        self.save()\n\nclass Category(models.Model):\n    name = models.CharField(unique=True, max_length=100)\n\n\nclass Post(models.Model, Reaction):\n    article = 'AR'\n    news = 'NW'\n    TYPES = [\n        (article, 'article'),\n        (news, 'news')\n    ]\n\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n    category = models.ManyToManyField(Category, through='PostCategory')\n    type = models.CharField(choices=TYPES, default=news, max_length=2)\n    date_time = models.DateTimeField(auto_now_add=True)\n    subject = models.CharField(max_length=100)\n    text = models.TextField()\n    rating = models.IntegerField(default=0)\n\n    def preview(self):\n        return f\"{self.text[:124]}...\"\n\n    def __str__(self):\n        return f\"{self.text}\"\n\n    def get_absolute_url(self):\n        return reverse('posts_detail', args=[str(self.id)])\n\n\nclass PostCategory(models.Model):\n    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)\n    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)\n\n\nclass Comment(models.Model, Reaction):\n    post = models.ForeignKey(Post, on_delete=models.CASCADE)\n    user = models.ForeignKey(models_auth.User, on_delete=models.CASCADE)\n    text = models.TextField()\n    date_time = models.DateField(auto_now_add=True)\n    rating = models.IntegerField(default=0)\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/News/models.py b/NewsPortsl/News/models.py
+--- a/NewsPortsl/News/models.py	
++++ b/NewsPortsl/News/models.py	
+@@ -1,3 +1,4 @@
++from django.contrib.auth.models import User
+ from django.db import models
+ from django.contrib.auth import models as models_auth
+ from django.urls import reverse
+@@ -43,6 +44,7 @@
+ 
+ class Category(models.Model):
+     name = models.CharField(unique=True, max_length=100)
++    subscribes = models.ManyToManyField(models_auth.User, blank=True, null=True, related_name='categories')
+ 
+ 
+ class Post(models.Model, Reaction):
+@@ -54,7 +56,7 @@
+     ]
+ 
+     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+-    category = models.ManyToManyField(Category, through='PostCategory')
++    category = models.ManyToManyField(Category, through='PostCategory', related_name='category')
+     type = models.CharField(choices=TYPES, default=news, max_length=2)
+     date_time = models.DateTimeField(auto_now_add=True)
+     subject = models.CharField(max_length=100)
+Index: NewsPortsl/News/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\n# Импортируем созданное нами представление\nfrom .views import PostsList, PostDetail, PostSearch, PostCreate, PostEdit, PostDelete, upgrade_me\n\n\nurlpatterns = [\n   path('', PostsList.as_view(), name='post_list'),\n   path('<int:pk>', PostDetail.as_view(), name='post_detail'),\n   path('search', PostSearch.as_view(), name='post_search'),\n   path('create', PostCreate.as_view(), name='post_create'),\n   path('<int:pk>/edit/', PostEdit.as_view(), name='post_edit'),\n   path('<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),\n   path('upgrade', upgrade_me, name='upgrade'),\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/News/urls.py b/NewsPortsl/News/urls.py
+--- a/NewsPortsl/News/urls.py	
++++ b/NewsPortsl/News/urls.py	
+@@ -1,14 +1,16 @@
+ from django.urls import path
+ # Импортируем созданное нами представление
+-from .views import PostsList, PostDetail, PostSearch, PostCreate, PostEdit, PostDelete, upgrade_me
++from .views import PostsList, PostDetail, PostSearch, PostCreate, PostEdit, PostDelete, upgrade_me, CategoryList
+ 
+ 
+ urlpatterns = [
+-   path('', PostsList.as_view(), name='post_list'),
++   # path('', PostsList.as_view(), name='post_list'),
+    path('<int:pk>', PostDetail.as_view(), name='post_detail'),
+    path('search', PostSearch.as_view(), name='post_search'),
+    path('create', PostCreate.as_view(), name='post_create'),
+    path('<int:pk>/edit/', PostEdit.as_view(), name='post_edit'),
+    path('<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
+    path('upgrade', upgrade_me, name='upgrade'),
++   # path('categories/<int:pk>', CategoryList.as_view(), name='category_list'),
++   path('categories/', CategoryList.as_view(), name='category_list'),
+ ]
+\ No newline at end of file
+Index: NewsPortsl/templates/Posts.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'flatpages/default.html' %}\n\n{% block title %} Posts {% endblock title %}\n\n{% load custom_tags %}\n\n{% block content %}\n    <h1>Posts count {{ posts | length }}</h1>\n\n    {% if posts %}\n        <table>\n            <tr>\n                <td>Subject</td>\n                <td>Date_Time<td>\n                <td>Text</td>\n            </tr>\n            {% for post in posts %}\n                <tr>\n                    <td>{{post.subject}}</td>\n                    <td>{{post.date_time | date:'d M Y'}}</td>\n                    <td>{{post.text | truncatechars:20}}</td>\n                </tr>\n            {% endfor %}\n        </table>\n    {% endif %}\n\n\n    {% if page_obj.has_previous %}\n       <a href=\"?{% url_replace page=1 %}\">1</a>\n       {% if page_obj.previous_page_number != 1 %}\n           ...\n           <a href=\"?{% url_replace page=page_obj.previous_page_number %}\">{{ page_obj.previous_page_number }}</a>\n       {% endif %}\n    {% endif %}\n\n   {# Информация о текущей странице #}\n   {{ page_obj.number }}\n\n   {# Информация о следующих страницах #}\n   {% if page_obj.has_next %}\n       <a href=\"?{% url_replace page=page_obj.next_page_number %}\">{{ page_obj.next_page_number }}</a>\n       {% if paginator.num_pages != page_obj.next_page_number %}\n           ...\n           <a href=\"?{% url_replace page=page_obj.paginator.num_pages %}\">{{ page_obj.paginator.num_pages }}</a>\n       {% endif %}\n   {% endif %}\n\n\n{% endblock content %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/templates/Posts.html b/NewsPortsl/templates/Posts.html
+--- a/NewsPortsl/templates/Posts.html	
++++ b/NewsPortsl/templates/Posts.html	
+@@ -13,13 +13,19 @@
+                 <td>Subject</td>
+                 <td>Date_Time<td>
+                 <td>Text</td>
++                <td>Category</td>
+             </tr>
+             {% for post in posts %}
+-                <tr>
+-                    <td>{{post.subject}}</td>
+-                    <td>{{post.date_time | date:'d M Y'}}</td>
+-                    <td>{{post.text | truncatechars:20}}</td>
+-                </tr>
++                <li>
++                    <div><a href="{% url 'post_detail' post.id %}">{{post.subject}}</a></div>
++                    <div>{{post.date_time | date:'d M Y'}}</div>
++                    <div align="100"><p>{{post.text | truncatechars:20}}</p></div>
++                    <div class="small">
++                        {% for category in post.category.all %}
++                        <a href="{% url 'category_list' category.id %}">{{ category.name }}</a>
++                        {% endfor %}
++                    </div>
++                </li>
+             {% endfor %}
+         </table>
+     {% endif %}
+Index: NewsPortsl/templates/flatpages/default.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\n<html>\n<head>\n<title>{% block title %}{% endblock title %}</title>\n</head>\n<body>\n{% block content%}\n{% endblock content%}\n</body>\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/templates/flatpages/default.html b/NewsPortsl/templates/flatpages/default.html
+--- a/NewsPortsl/templates/flatpages/default.html	
++++ b/NewsPortsl/templates/flatpages/default.html	
+@@ -1,9 +1,12 @@
+ <!DOCTYPE html>
++{% load static %}
+ <html>
+ <head>
++<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+ <title>{% block title %}{% endblock title %}</title>
+ </head>
+ <body>
++{% include 'flatpages/navi.html' %}
+ {% block content%}
+ {% endblock content%}
+ </body>
+Index: NewsPortsl/News/migrations/0001_initial.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/News/migrations/0001_initial.py b/NewsPortsl/News/migrations/0001_initial.py
+deleted file mode 100644
+--- a/NewsPortsl/News/migrations/0001_initial.py	
++++ /dev/null	
+@@ -1,59 +0,0 @@
+-# Generated by Django 4.2.5 on 2023-10-05 15:54
+-
+-import News.models
+-from django.conf import settings
+-from django.db import migrations, models
+-import django.db.models.deletion
+-
+-
+-class Migration(migrations.Migration):
+-
+-    initial = True
+-
+-    dependencies = [
+-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+-    ]
+-
+-    operations = [
+-        migrations.CreateModel(
+-            name='Author',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('rating', models.IntegerField(default=0)),
+-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Category',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('name', models.CharField(max_length=100, unique=True)),
+-            ],
+-        ),
+-        migrations.CreateModel(
+-            name='Post',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('type', models.CharField(choices=[('AR', 'article'), ('NW', 'news')], default='NW', max_length=2)),
+-                ('date_time', models.DateField(auto_now_add=True)),
+-                ('subject', models.CharField(max_length=100)),
+-                ('text', models.TextField()),
+-                ('rating', models.IntegerField(default=0)),
+-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='News.author')),
+-            ],
+-            bases=(models.Model, News.models.Reaction),
+-        ),
+-        migrations.CreateModel(
+-            name='PostCategory',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('category_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='News.category')),
+-                ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='News.post')),
+-            ],
+-        ),
+-        migrations.AddField(
+-            model_name='post',
+-            name='category',
+-            field=models.ManyToManyField(through='News.PostCategory', to='News.category'),
+-        ),
+-    ]
+Index: NewsPortsl/News/migrations/0002_comment.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/News/migrations/0002_comment.py b/NewsPortsl/News/migrations/0002_comment.py
+deleted file mode 100644
+--- a/NewsPortsl/News/migrations/0002_comment.py	
++++ /dev/null	
+@@ -1,29 +0,0 @@
+-# Generated by Django 4.2.5 on 2023-10-05 15:57
+-
+-import News.models
+-from django.conf import settings
+-from django.db import migrations, models
+-import django.db.models.deletion
+-
+-
+-class Migration(migrations.Migration):
+-
+-    dependencies = [
+-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+-        ('News', '0001_initial'),
+-    ]
+-
+-    operations = [
+-        migrations.CreateModel(
+-            name='Comment',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('text', models.TextField()),
+-                ('date_time', models.DateField(auto_now_add=True)),
+-                ('rating', models.IntegerField(default=0)),
+-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='News.post')),
+-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+-            ],
+-            bases=(models.Model, News.models.Reaction),
+-        ),
+-    ]
+Index: NewsPortsl/templates/Post.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'flatpages/default.html' %}\n\n\n{% block title %}\nPost\n{% endblock title %}\n\n{% block content %}\n<h1>{{ post.subject}}</h1>\n{{post.date_time}}\n{{post.text}}\n{% endblock content %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NewsPortsl/templates/Post.html b/NewsPortsl/templates/Post.html
+--- a/NewsPortsl/templates/Post.html	
++++ b/NewsPortsl/templates/Post.html	
+@@ -7,6 +7,10 @@
+ 
+ {% block content %}
+ <h1>{{ post.subject}}</h1>
+-{{post.date_time}}
++<div>{{post.date_time}}</div>
+ {{post.text}}
++<div>{% for category in post.category.all %}
++    {{ category.name }}
++</div>
++{% endfor %}
+ {% endblock content %}
+\ No newline at end of file
+Index: NewsPortsl/templates/category_list.html
+===================================================================
+diff --git a/NewsPortsl/templates/category_list.html b/NewsPortsl/templates/category_list.html
+new file mode 100644
+--- /dev/null	
++++ b/NewsPortsl/templates/category_list.html	
+@@ -0,0 +1,3 @@
++{% for category in category_news_list %}
++{{ category }}
++{% endfor %}
+\ No newline at end of file
+Index: NewsPortsl/News/migrations/0003_alter_post_category.py
+===================================================================
+diff --git a/NewsPortsl/News/migrations/0003_alter_post_category.py b/NewsPortsl/News/migrations/0003_alter_post_category.py
+new file mode 100644
+--- /dev/null	
++++ b/NewsPortsl/News/migrations/0003_alter_post_category.py	
+@@ -0,0 +1,18 @@
++# Generated by Django 4.2.5 on 2023-12-05 14:58
++
++from django.db import migrations, models
++
++
++class Migration(migrations.Migration):
++
++    dependencies = [
++        ('News', '0002_category_subscribes'),
++    ]
++
++    operations = [
++        migrations.AlterField(
++            model_name='post',
++            name='category',
++            field=models.ManyToManyField(related_name='category', through='News.PostCategory', to='News.category'),
++        ),
++    ]
+Index: NewsPortsl/News/migrations/0002_category_subscribes.py
+===================================================================
+diff --git a/NewsPortsl/News/migrations/0002_category_subscribes.py b/NewsPortsl/News/migrations/0002_category_subscribes.py
+new file mode 100644
+--- /dev/null	
++++ b/NewsPortsl/News/migrations/0002_category_subscribes.py	
+@@ -0,0 +1,20 @@
++# Generated by Django 4.2.5 on 2023-12-04 15:49
++
++from django.conf import settings
++from django.db import migrations, models
++
++
++class Migration(migrations.Migration):
++
++    dependencies = [
++        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
++        ('News', '0001_initial'),
++    ]
++
++    operations = [
++        migrations.AddField(
++            model_name='category',
++            name='subscribes',
++            field=models.ManyToManyField(blank=True, null=True, related_name='categories', to=settings.AUTH_USER_MODEL),
++        ),
++    ]
+Index: NewsPortsl/templates/flatpages/navi.html
+===================================================================
+diff --git a/NewsPortsl/templates/flatpages/navi.html b/NewsPortsl/templates/flatpages/navi.html
+new file mode 100644
+--- /dev/null	
++++ b/NewsPortsl/templates/flatpages/navi.html	
+@@ -0,0 +1,4 @@
++<a href="{% url 'post_search' %}">post_search</a>
++<a href="{% url 'post_list' %}">post_list</a>
++<a href="{% url 'post_create' %}">post_create</a>
++<a href="{% url 'category_list' %}">category_list</a>

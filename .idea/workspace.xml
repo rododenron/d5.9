@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3c066f3c-4611-453d-a71c-34727ae8d7e1" name="Changes" comment="D11.4_01">
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/NewsPortsl/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/NewsPortsl/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/cache_files/2950cf4ea0db61fd71f65e677fd75c8b.djcache" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/cache_files/2950cf4ea0db61fd71f65e677fd75c8b.djcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/cache_files/423ae3e99121db65dd228ff94f9ff841.djcache" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/cache_files/423ae3e99121db65dd228ff94f9ff841.djcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/cache_files/6be3141be4ad8bdf1f739708bd6c3040.djcache" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/cache_files/6be3141be4ad8bdf1f739708bd6c3040.djcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/cache_files/7e24693c31cc4b68f01136116ac42f5d.djcache" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/cache_files/7e24693c31cc4b68f01136116ac42f5d.djcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/cache_files/e4181d2cdaddb44fadd13c9527f686e7.djcache" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/cache_files/e4181d2cdaddb44fadd13c9527f686e7.djcache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NewsPortsl/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/NewsPortsl/db.sqlite3" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="c756855cc93d533d8bd44cabc02105298017a459" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rododenron&quot;
+  }
+}</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="e6188011-950d-40a0-9f2b-8dcfe87f2530" />
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/rododenron/d5.9&quot;,
+    &quot;accountId&quot;: &quot;e6188011-950d-40a0-9f2b-8dcfe87f2530&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/NewsPortsl/NewsPortsl/settings.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2WDA9B3LqiMOybvs9uVYluc4oDV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.django.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/usr01/PycharmProjects/pythonProject3&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/NewsPortsl/static/css" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/NewsPortsl/News/management/commands" />
+      <recent name="$PROJECT_DIR$/NewsPortsl/News/templatetags" />
+      <recent name="$PROJECT_DIR$/NewsPortsl/templates" />
+      <recent name="$PROJECT_DIR$/NewsPortsl/News" />
+      <recent name="$PROJECT_DIR$/NewsPortsl/NewsPortsl/filters" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.django">
+    <configuration name="django" type="PythonConfigurationType" factoryName="Python">
+      <module name="pythonProject4" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10 (pythonProject4)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/NewsPortsl/manage.py" />
+      <option name="PARAMETERS" value="runserver" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="pythonProject4" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.django" />
+      <item itemvalue="Python.main" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-0509580d9d50-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.14494.241" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3c066f3c-4611-453d-a71c-34727ae8d7e1" name="Changes" comment="" />
+      <created>1696256622869</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1696256622869</updated>
+    </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1696561550489</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1696561550489</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added file with commands for django shell">
+      <option name="closed" value="true" />
+      <created>1696562183579</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1696562183579</updated>
+    </task>
+    <task id="LOCAL-00003" summary="D6.3">
+      <option name="closed" value="true" />
+      <created>1697128076893</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1697128076893</updated>
+    </task>
+    <task id="LOCAL-00004" summary="D6.3">
+      <option name="closed" value="true" />
+      <created>1697128950084</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1697128950084</updated>
+    </task>
+    <task id="LOCAL-00005" summary="D6.3">
+      <option name="closed" value="true" />
+      <created>1697129128580</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1697129128580</updated>
+    </task>
+    <task id="LOCAL-00006" summary="D6.3">
+      <option name="closed" value="true" />
+      <created>1697129142676</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697129142676</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added filter by date, subject, author">
+      <option name="closed" value="true" />
+      <created>1697770349751</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1697770349751</updated>
+    </task>
+    <task id="LOCAL-00008" summary="D7.7">
+      <option name="closed" value="true" />
+      <created>1697819523247</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1697819523247</updated>
+    </task>
+    <task id="LOCAL-00009" summary="D7.7">
+      <option name="closed" value="true" />
+      <created>1698164524546</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1698164524546</updated>
+    </task>
+    <task id="LOCAL-00010" summary="D7.7">
+      <option name="closed" value="true" />
+      <created>1698164553575</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1698164553575</updated>
+    </task>
+    <task id="LOCAL-00011" summary="D7.7">
+      <option name="closed" value="true" />
+      <created>1698164607874</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1698164607874</updated>
+    </task>
+    <task id="LOCAL-00012" summary="D8.7">
+      <option name="closed" value="true" />
+      <created>1698164626554</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1698164626554</updated>
+    </task>
+    <task id="LOCAL-00013" summary="D9.5">
+      <option name="closed" value="true" />
+      <created>1702608744844</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1702608744844</updated>
+    </task>
+    <task id="LOCAL-00014" summary="D9.5">
+      <option name="closed" value="true" />
+      <created>1704173546933</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1704173546933</updated>
+    </task>
+    <task id="LOCAL-00015" summary="D9.5">
+      <option name="closed" value="true" />
+      <created>1704173566969</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1704173566970</updated>
+    </task>
+    <task id="LOCAL-00016" summary="D11.4_01">
+      <option name="closed" value="true" />
+      <created>1704346360307</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1704346360307</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="first commit" />
+    <MESSAGE value="Added file with commands for django shell" />
+    <MESSAGE value="D6.4" />
+    <MESSAGE value="D6.3" />
+    <MESSAGE value="Added filter by date, subject, author" />
+    <MESSAGE value="D7.7" />
+    <MESSAGE value="D8.7" />
+    <MESSAGE value="D9.5" />
+    <MESSAGE value="D11.4_01" />
+    <option name="LAST_COMMIT_MESSAGE" value="D11.4_01" />
+  </component>
+</project>
